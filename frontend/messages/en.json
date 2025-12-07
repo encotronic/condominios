@@ -1,0 +1,45 @@
+{
+  "app": {
+    "name": "Condominium Manager",
+    "description": "Premium condominium management system",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Operation successful"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "units": "Units",
+    "payments": "Payments",
+    "reports": "Reports",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "rememberMe": "Remember me"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "totalUnits": "Total units",
+    "activePayments": "Active payments",
+    "pendingDebts": "Pending debts",
+    "collectionRate": "Collection rate"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "app": {
+    "name": "Condóminio Manager",
+    "description": "Sistema premium de administración de condominios",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Operación exitosa"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "units": "Unidades",
+    "payments": "Pagos",
+    "reports": "Reportes",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "register": "Registrarse"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "view": "Ver",
+    "create": "Crear",
+    "search": "Buscar",
+    "filter": "Filtrar"
+  },
+  "auth": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "rememberMe": "Recordarme"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido",
+    "totalUnits": "Unidades totales",
+    "activePayments": "Pagos activos",
+    "pendingDebts": "Deudas pendientes",
+    "collectionRate": "Tasa de cobranza"
+  }
+}

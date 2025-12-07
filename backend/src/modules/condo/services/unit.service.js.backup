@@ -1,0 +1,35 @@
+// backend/src/modules/condo/services/unit.service.js
+
+// Importación de la conexión a la base de datos
+const db = require('../../../shared/database/db'); 
+
+class UnitService {
+    /**
+     * Obtiene todas las unidades asociadas a un condominio específico (Multi-Tenancy).
+     * @param {string} condoId - El ID del condominio, extraído del token JWT.
+     * @returns {Promise<Array>} Un array de objetos de unidad.
+     */
+    async getUnitsByCondoId(condoId) {
+        // La consulta utiliza $1 para inyectar el condoId, asegurando la seguridad.
+        const query = `
+            SELECT id, code, aliquot_percentage, owner_id
+            FROM units
+            WHERE condominium_id = $1
+            ORDER BY code;
+        `;
+        
+        try {
+            const result = await db.query(query, [condoId]);
+            return result.rows;
+        } catch (error) {
+            console.error('Error al obtener unidades por condominio:', error);
+            // En un entorno real, lanzarías un error personalizado aquí.
+            throw new Error('Error al acceder a los datos de unidades.');
+        }
+    }
+
+    // Aquí se agregarán más métodos como getUnitById, createUnit, etc.
+
+}
+
+module.exports = new UnitService();
