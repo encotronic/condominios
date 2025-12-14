@@ -86,9 +86,21 @@ jobs:
           echo "PGPORT=5432" >> .env
 
       - name: Setup test DB schema
+        env:
+          PGHOST: localhost
+          PGUSER: testuser
+          PGPASSWORD: testpass
+          PGDATABASE: testdb
+          PGPORT: '5432'
+          NODE_ENV: test
         run: npm run db:setup:test
 
       - name: Run tests
         env:
           NODE_ENV: test
+          PGHOST: localhost
+          PGUSER: testuser
+          PGPASSWORD: testpass
+          PGDATABASE: testdb
+          PGPORT: '5432'
         run: npm test
