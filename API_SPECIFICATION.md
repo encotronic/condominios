@@ -111,7 +111,7 @@ Request:
 ```json
 {
   "email": "usuario@example.com",
-  "password": "password123",
+  "password": "SecureP@ssw0rd123!",
   "condominio_id": "uuid-condominio"
 }
 ```

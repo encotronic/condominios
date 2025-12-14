@@ -11,6 +11,8 @@ Este documento define los modelos de datos principales para la plataforma SaaS m
 Representa cada condominio en el sistema multi-tenant.
 
 ```sql
+-- Nota: gen_random_uuid() requiere PostgreSQL 13+
+-- Para versiones anteriores usar: uuid_generate_v4() con extensión pgcrypto
 CREATE TABLE condominios (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre VARCHAR(255) NOT NULL,

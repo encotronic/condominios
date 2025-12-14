@@ -850,10 +850,10 @@ app.post('/api/v1/users',
 );
 
 // Prevención de SQL Injection (usar ORM)
-// ❌ MAL
+// ❌ MAL - Vulnerable a SQL Injection: un atacante podría pasar email = "' OR '1'='1"
 const users = await db.raw(`SELECT * FROM users WHERE email = '${email}'`);
 
-// ✅ BIEN
+// ✅ BIEN - El ORM escapa automáticamente los valores, previniendo SQL Injection
 const users = await db('users').where({ email });
 
 // Rate Limiting

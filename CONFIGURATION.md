@@ -507,6 +507,15 @@ const activosConfigSchema = {
 };
 
 const validate = ajv.compile(activosConfigSchema);
+
+// Uso del validador
+function validarConfiguracionActivos(config) {
+  const valid = validate(config);
+  if (!valid) {
+    throw new Error(`Configuración inválida: ${JSON.stringify(validate.errors)}`);
+  }
+  return true;
+}
 ```
 
 ### 4.3 API de Configuración
