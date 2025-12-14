@@ -13,17 +13,23 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-// Prueba de conexión al iniciar
-pool.connect()
-  .then(client => {
-    console.log('✅ Conexión a PostgreSQL establecida con éxito.');
-    client.release();
-  })
-  .catch(err => {
-    // Detiene la aplicación si no hay conexión a la base de datos
-    console.error('❌ Error CRÍTICO de conexión a PostgreSQL:', err.stack);
-    process.exit(1); 
-  });
+// Prueba de conexión al iniciar (omitir en tests o si SKIP_DB_INIT está activado)
+if (process.env.NODE_ENV !== 'test' && !process.env.SKIP_DB_INIT) {
+  pool.connect()
+    .then(client => {
+      console.log('✅ Conexión a PostgreSQL establecida con éxito.');
+      client.release();
+    })
+    .catch(err => {
+      // En entornos no-test, reportar pero no hacer crash automático si se desea
+      console.error('❌ Error CRÍTICO de conexión a PostgreSQL:', err.stack);
+      // Mantener comportamiento previo: salir con error para entornos reales
+      process.exit(1);
+    });
+} else {
+  // No intentar conexión cuando estamos en test o se solicita explícitamente
+  if (process.env.NODE_ENV === 'test') console.log('[db] Inicialización de DB omitida en modo test');
+}
 
 module.exports = {
   /** Función estándar para ejecutar consultas SQL */

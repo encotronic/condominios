@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles",
+    "create:test-announcement": "node scripts/create_test_announcement.js",
+    "list:test-announcements": "node scripts/list_test_announcements.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +18,15 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3"
+  }
+  ,
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/test"]
   }
 }
