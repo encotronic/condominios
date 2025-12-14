@@ -5,6 +5,10 @@ const router = express.Router();
 // Importar Middlewares
 const authMiddleware = require('../../shared/middlewares/authMiddleware');
 const roleMiddleware = require('../../shared/middlewares/roleMiddleware');
+const validateCondoOverride = require('../../shared/middlewares/validateCondoOverride');
+
+// Sanitizar overrides en las rutas de reports
+router.use(validateCondoOverride);
 
 // Importar Controladores
 const reportsController = require('./controllers/reports.controller');

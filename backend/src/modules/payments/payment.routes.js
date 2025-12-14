@@ -5,6 +5,10 @@ const router = express.Router();
 // Importar Middlewares de Seguridad
 const authMiddleware = require('../../shared/middlewares/authMiddleware');
 const roleMiddleware = require('../../shared/middlewares/roleMiddleware');
+const validateCondoOverride = require('../../shared/middlewares/validateCondoOverride');
+
+// Sanitizar overrides en las rutas de payments
+router.use(validateCondoOverride);
 
 // Importar los Controladores
 const paymentController = require('./controllers/payment.controller');

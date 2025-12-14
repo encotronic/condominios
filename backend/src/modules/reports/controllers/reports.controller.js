@@ -7,7 +7,9 @@ const db = require('../../../shared/database/db');
  * Ruta: GET /api/reports/unit-statement (sin unitId)
  */
 const getUnitStatementController = async (req, res) => {
-    const { condoId: condominiumId, id: userId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { id: userId, role } = req.user;
 
     // Solo UNIT_OWNER puede usar esta ruta sin unitId
     if (role !== 'UNIT_OWNER') {
@@ -65,7 +67,9 @@ const getUnitStatementController = async (req, res) => {
  * Ruta: GET /api/reports/unit-statement/:unitId
  */
 const getUnitStatementByIdController = async (req, res) => {
-    const { condoId: condominiumId, id: userId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { id: userId, role } = req.user;
     const { unitId } = req.params;
 
     if (!unitId) {
@@ -108,7 +112,8 @@ const getUnitStatementByIdController = async (req, res) => {
  * Ruta: GET /api/reports/delinquency
  */
 const getDelinquencyReportController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { daysOverdue = 30 } = req.query;
 
     try {
@@ -142,7 +147,8 @@ const getDelinquencyReportController = async (req, res) => {
  * Ruta: GET /api/reports/financial-summary
  */
 const getFinancialSummaryController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { 
         startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
         endDate = new Date().toISOString().split('T')[0]
@@ -176,7 +182,9 @@ const getFinancialSummaryController = async (req, res) => {
  * Ruta: GET /api/reports/payment-history
  */
 const getPaymentHistoryController = async (req, res) => {
-    const { condoId: condominiumId, id: userId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { id: userId, role } = req.user;
     const { 
         startDate, 
         endDate,
@@ -220,7 +228,8 @@ const getPaymentHistoryController = async (req, res) => {
  * Ruta: GET /api/reports/units-summary
  */
 const getUnitsSummaryController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
 
     try {
         const unitsSummary = await reportsService.getUnitsSummary(condominiumId);

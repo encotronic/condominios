@@ -5,7 +5,8 @@ const BACKEND_URL = 'http://localhost:5000';
 
 // Crear instancia de axios con configuración base
 const apiClient = axios.create({
-  baseURL: BACKEND_URL,
+  // Establecer la baseURL apuntando al prefijo `/api` del backend
+  baseURL: `${BACKEND_URL}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -48,3 +49,6 @@ apiClient.interceptors.response.use(
 );
 
 export { apiClient, BACKEND_URL };
+
+// Exportar alias `api` para compatibilidad con servicios que importan `api`
+export const api = apiClient;

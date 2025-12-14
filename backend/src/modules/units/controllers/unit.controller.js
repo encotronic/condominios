@@ -7,8 +7,9 @@ const unitService = require('../services/unit.service');
  * Roles requeridos: ADMIN, MANAGER
  */
 const createUnitController = async (req, res) => {
-    // El condoId y el ID del usuario provienen del token (req.user)
-    const { condoId: condominiumId } = req.user; 
+    // El condoId objetivo: permitimos override por query/body cuando es ADMIN/MANAGER
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { code, aliquotPercentage, ownerId } = req.body;
 
     // 1. Validar datos básicos
@@ -47,8 +48,9 @@ const createUnitController = async (req, res) => {
  * Roles requeridos: ADMIN, MANAGER, UNIT_OWNER (solo ve sus datos)
  */
 const getUnitsController = async (req, res) => {
-    // El condoId se extrae del token, asegurando aislamiento de datos.
-    const { condoId: condominiumId } = req.user;
+    // El condoId objetivo: permitimos override por query cuando es ADMIN/MANAGER
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
 
     try {
         const units = await unitService.getUnitsByCondominiumId(condominiumId);

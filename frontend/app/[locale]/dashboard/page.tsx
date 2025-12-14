@@ -202,7 +202,7 @@ export default function DashboardPage() {
             </button>
           </div>
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300} minWidth={0}>
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="month" stroke="#9CA3AF" />
@@ -231,14 +231,17 @@ export default function DashboardPage() {
             </button>
           </div>
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300} minWidth={0}>
               <PieChart>
                 <Pie
                   data={paymentStatusData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => {
+                    const pct = typeof percent === 'number' ? percent : 0;
+                    return `${name}: ${(pct * 100).toFixed(0)}%`;
+                  }}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"

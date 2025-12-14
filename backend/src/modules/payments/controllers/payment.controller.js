@@ -54,7 +54,9 @@ const registerPaymentController = async (req, res) => {
  * Roles requeridos: ADMIN, MANAGER (UNIT_OWNER solo ve los suyos)
  */
 const getAllPaymentsController = async (req, res) => {
-    const { condoId: condominiumId, id: userId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { id: userId, role } = req.user;
     
     // UNIT_OWNER solo puede ver sus propios pagos
     const filterByUserId = (role === 'UNIT_OWNER') ? userId : null;
@@ -85,7 +87,9 @@ const getAllPaymentsController = async (req, res) => {
  * Roles requeridos: ADMIN, MANAGER, UNIT_OWNER (solo su unidad)
  */
 const getPaymentsByUnitController = async (req, res) => {
-    const { condoId: condominiumId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { role } = req.user;
     const { unitId } = req.params;
 
     // UNIT_OWNER solo puede ver pagos de sus unidades
@@ -118,7 +122,9 @@ const getPaymentsByUnitController = async (req, res) => {
  * Roles requeridos: ADMIN, MANAGER, UNIT_OWNER (solo sus pagos)
  */
 const getPaymentByIdController = async (req, res) => {
-    const { condoId: condominiumId, id: userId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { id: userId, role } = req.user;
     const { id } = req.params;
 
     try {
@@ -161,7 +167,9 @@ const getPaymentByIdController = async (req, res) => {
  * Roles requeridos: ADMIN, MANAGER
  */
 const getPaymentsSummaryController = async (req, res) => {
-    const { condoId: condominiumId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { role } = req.user;
     const { startDate, endDate } = req.query;
 
     if (role !== 'ADMIN' && role !== 'MANAGER') {

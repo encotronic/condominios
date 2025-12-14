@@ -37,11 +37,12 @@ if (process.env.NODE_ENV === 'test') {
   try {
     const getTargetCondoId = require('./shared/utils/getTargetCondoId');
     app.post('/__test/resolve-condo', (req, res) => {
-      // Para facilitar tests, si el body trae `user` lo asignamos a req.user
       if (req.body && req.body.user) req.user = req.body.user;
       const result = getTargetCondoId(req);
       res.status(200).json({ condoId: result });
     });
+
+    // NOTE: removed test-only create-announcement route to use actual controller in integration tests
   } catch (e) {
     console.warn('[app] test route setup skipped:', e && e.message ? e.message : e);
   }

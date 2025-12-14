@@ -5,6 +5,7 @@ const router = express.Router();
 // Middlewares de seguridad
 const authMiddleware = require('../../shared/middlewares/authMiddleware');
 const roleMiddleware = require('../../shared/middlewares/roleMiddleware');
+const validateCondoOverride = require('../../shared/middlewares/validateCondoOverride');
 
 // Controlador existente de facturación
 const billingController = require('./controllers/billing.controller');
@@ -17,6 +18,9 @@ const chargeController = require('./controllers/charge.controller');
 // ===============================================
 
 // Obtener todos los cargos / Crear nuevo cargo
+// Aplicar sanitización de override en este router
+router.use(validateCondoOverride);
+
 router.route('/charges')
     .get(
         authMiddleware,

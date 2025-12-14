@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { authService, LoginRequest } from '@/lib/api/auth.service';
 import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default function LoginPage() {
   const { t, locale } = useTranslations();
@@ -84,7 +86,7 @@ export default function LoginPage() {
         </div>
 
         {/* Card del formulario */}
-        <div className="bg-card border rounded-2xl shadow-xl p-8 space-y-6">
+        <Card className="border rounded-2xl shadow-xl p-8 space-y-6">
           {/* Mensajes de estado */}
           {error && (
             <div className="flex items-center gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive animate-fade-up">
@@ -204,7 +206,7 @@ export default function LoginPage() {
               <div className="w-full border-t"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-card text-muted-foreground">O continúa con</span>
+              <Badge className="px-2 text-muted-foreground">O continúa con</Badge>
             </div>
           </div>
 
@@ -220,7 +222,7 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-        </div>
+        </Card>
 
         {/* Footer */}
         <div className="text-center text-xs text-muted-foreground">

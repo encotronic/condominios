@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles",
     "create:test-announcement": "node scripts/create_test_announcement.js",
-    "list:test-announcements": "node scripts/list_test_announcements.js"
+    "list:test-announcements": "node scripts/list_test_announcements.js",
+    "db:setup:test": "node scripts/setup_test_db.js"
   },
   "keywords": [],
   "author": "",

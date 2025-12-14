@@ -5,6 +5,10 @@ const router = express.Router();
 // Middlewares de seguridad
 const authMiddleware = require('../../shared/middlewares/authMiddleware');
 const roleMiddleware = require('../../shared/middlewares/roleMiddleware');
+const validateCondoOverride = require('../../shared/middlewares/validateCondoOverride');
+
+// Sanitizar overrides en condo routes
+router.use(validateCondoOverride);
 
 // Controladores de Unidades (CRUD completo)
 const { 

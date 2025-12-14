@@ -1,77 +1,111 @@
-import { apiClient } from './axios-config';
-
-// Interfaces
-export interface Unit {
-  id: string;
-  unit_number: string;
-  aliquot: number;
-  is_active: boolean;
-  condominium_id: string;
-  owner_id?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Owner {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  unit_id?: string;
-  condominium_id: string;
-  created_at: string;
-  updated_at: string;
-}
+import { api } from './axios-config';
+import { snakeToCamel, camelToSnake } from './normalize';
+import type { Unit, Owner } from '../../../shared/types/entities';
+export type { Unit, Owner } from '../../../shared/types/entities';
 
 // Servicio de condominio
 export const condoService = {
   // ===== UNIDADES =====
-  async getUnits(): Promise<Unit[]> {
-    const response = await apiClient.get('/api/condo/units');
-    return response.data;
+  async getUnits(options?: { condominiumId?: string }): Promise<Unit[]> {
+    const params = options?.condominiumId ? { condominiumId: options.condominiumId } : undefined;
+    const response = await api.get('/condo/units', { params });
+    const data = response.data || [];
+    return Array.isArray(data)
+      ? data.map((d: any) => {
+          const mapped = snakeToCamel<Unit>(d);
+          // normalize numeric-like strings
+          if ((mapped as any).aliquotPercentage != null) {
+            const v = (mapped as any).aliquotPercentage;
+            (mapped as any).aliquotPercentage = typeof v === 'string' ? Number(v) : v;
+          }
+          return mapped;
+        })
+      : [];
   },
 
   async getUnitById(id: string): Promise<Unit> {
-    const response = await apiClient.get(`/api/condo/units/${id}`);
-    return response.data;
+    const response = await api.get(`/condo/units/${id}`);
+    const mapped = snakeToCamel<Unit>(response.data);
+    if ((mapped as any).aliquotPercentage != null) {
+      const v = (mapped as any).aliquotPercentage;
+      (mapped as any).aliquotPercentage = typeof v === 'string' ? Number(v) : v;
+    }
+    return mapped;
   },
 
-  async createUnit(unitData: Omit<Unit, 'id' | 'created_at' | 'updated_at'>): Promise<Unit> {
-    const response = await apiClient.post('/api/condo/units', unitData);
-    return response.data;
+  async createUnit(unitData: Omit<Unit, 'id' | 'createdAt' | 'updatedAt'>): Promise<Unit> {
+    const payload = camelToSnake({
+      code: unitData.code,
+      aliquotPercentage: unitData.aliquotPercentage,
+      ownerId: unitData.ownerId,
+    });
+
+    const response = await api.post('/condo/units', payload);
+    const mapped = snakeToCamel<Unit>(response.data);
+    if ((mapped as any).aliquotPercentage != null) {
+      const v = (mapped as any).aliquotPercentage;
+      (mapped as any).aliquotPercentage = typeof v === 'string' ? Number(v) : v;
+    }
+    return mapped;
   },
 
   async updateUnit(id: string, unitData: Partial<Unit>): Promise<Unit> {
-    const response = await apiClient.put(`/api/condo/units/${id}`, unitData);
-    return response.data;
+    const payload: any = camelToSnake({
+      ...(unitData.code !== undefined ? { code: unitData.code } : {}),
+      ...(unitData.aliquotPercentage !== undefined ? { aliquotPercentage: unitData.aliquotPercentage } : {}),
+      ...(unitData.ownerId !== undefined ? { ownerId: unitData.ownerId } : {}),
+    });
+
+    const response = await api.put(`/condo/units/${id}`, payload);
+    const mapped = snakeToCamel<Unit>(response.data);
+    if ((mapped as any).aliquotPercentage != null) {
+      const v = (mapped as any).aliquotPercentage;
+      (mapped as any).aliquotPercentage = typeof v === 'string' ? Number(v) : v;
+    }
+    return mapped;
   },
 
   async deleteUnit(id: string): Promise<void> {
-    await apiClient.delete(`/api/condo/units/${id}`);
+    await api.delete(`/condo/units/${id}`);
   },
 
   // ===== PROPIETARIOS =====
-  async getOwners(): Promise<Owner[]> {
-    const response = await apiClient.get('/api/condo/owners');
-    return response.data;
+  async getOwners(options?: { condominiumId?: string }): Promise<Owner[]> {
+    const params = options?.condominiumId ? { condominiumId: options.condominiumId } : undefined;
+    const response = await api.get('/condo/owners', { params });
+    const data = response.data || [];
+    return Array.isArray(data) ? data.map((d: any) => snakeToCamel<Owner>(d)) : [];
   },
 
   async getOwnerById(id: string): Promise<Owner> {
-    const response = await apiClient.get(`/api/condo/owners/${id}`);
-    return response.data;
+    const response = await api.get(`/condo/owners/${id}`);
+    return snakeToCamel<Owner>(response.data);
   },
 
-  async createOwner(ownerData: Omit<Owner, 'id' | 'created_at' | 'updated_at'>): Promise<Owner> {
-    const response = await apiClient.post('/api/condo/owners', ownerData);
-    return response.data;
+  async createOwner(ownerData: Omit<Owner, 'id' | 'createdAt' | 'updatedAt'>): Promise<Owner> {
+    const payload = camelToSnake({
+      fullName: ownerData.fullName,
+      email: ownerData.email,
+      phone: ownerData.phone,
+      ...(ownerData as any).userId ? { userId: (ownerData as any).userId } : {},
+    });
+
+    const response = await api.post('/condo/owners', payload);
+    return snakeToCamel<Owner>(response.data);
   },
 
   async updateOwner(id: string, ownerData: Partial<Owner>): Promise<Owner> {
-    const response = await apiClient.put(`/api/condo/owners/${id}`, ownerData);
-    return response.data;
+    const payload = camelToSnake({
+      ...(ownerData.fullName !== undefined ? { fullName: ownerData.fullName } : {}),
+      ...(ownerData.email !== undefined ? { email: ownerData.email } : {}),
+      ...(ownerData.phone !== undefined ? { phone: ownerData.phone } : {}),
+    });
+
+    const response = await api.put(`/condo/owners/${id}`, payload);
+    return snakeToCamel<Owner>(response.data);
   },
 
   async deleteOwner(id: string): Promise<void> {
-    await apiClient.delete(`/api/condo/owners/${id}`);
+    await api.delete(`/condo/owners/${id}`);
   },
 };

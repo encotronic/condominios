@@ -7,7 +7,9 @@ const ownerService = require('../services/owner.service');
  * Roles: ADMIN, MANAGER
  */
 const createOwnerController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    console.log('CREATE OWNER REQUEST:', req.body, 'USER:', req.user);
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { fullName, email, phone, userId } = req.body; 
 
     if (!fullName || !email) {
@@ -15,12 +17,12 @@ const createOwnerController = async (req, res) => {
     }
 
     try {
-        const newOwner = await ownerService.createOwner({
+         const newOwner = await ownerService.createOwner({
             fullName, 
             email, 
             phone, 
-            userId: userId || req.user.id, 
-            condominiumId
+            userId: userId || null,  
+            condominiumId            
         });
         return res.status(201).json({ message: 'Propietario creado exitosamente.', owner: newOwner });
     } catch (error) {
@@ -37,7 +39,8 @@ const createOwnerController = async (req, res) => {
  * Roles: ADMIN, MANAGER
  */
 const getOwnersController = async (req, res) => {
-    const { condoId: condominiumId } = req.user; 
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
 
     try {
         const owners = await ownerService.getOwnersByCondoId(condominiumId);
@@ -53,7 +56,8 @@ const getOwnersController = async (req, res) => {
  * Roles: ADMIN, MANAGER
  */
 const getOwnerByIdController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { id } = req.params;
 
     try {
@@ -75,7 +79,8 @@ const getOwnerByIdController = async (req, res) => {
  * Roles: ADMIN, MANAGER
  */
 const updateOwnerController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { id } = req.params;
     const { fullName, email, phone } = req.body;
 
@@ -108,7 +113,8 @@ const updateOwnerController = async (req, res) => {
  * Roles: ADMIN, MANAGER
  */
 const deleteOwnerController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { id } = req.params;
 
     try {

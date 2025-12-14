@@ -10,9 +10,9 @@ const registerController = async (req, res) => {
   const { email, password, fullName, condominiumId } = req.body;
 
   // 1. Validar la entrada básica (El Servicio valida las reglas de negocio)
-  if (!email || !password || !fullName || !condominiumId) {
-    return res.status(400).json({ message: 'Todos los campos (email, password, fullName, condominiumId) son requeridos.' });
-  }
+  if (!email || !password) {
+  return res.status(400).json({ message: 'Email y contraseña son requeridos.' });
+}
 
   try {
     // 2. Llamar al Servicio (EL CEREBRO)
@@ -49,9 +49,9 @@ const registerController = async (req, res) => {
 const loginController = async (req, res) => {
   const { email, password, condominiumId } = req.body;
 
-  if (!email || !password || !condominiumId) {
-    return res.status(400).json({ message: 'Email, contraseña e ID de condominio son requeridos.' });
-  }
+  if (!email || !password) {
+  return res.status(400).json({ message: 'Email y contraseña son requeridos.' });
+}
 
   try {
     // 2. Llamar al Servicio (EL CEREBRO)
@@ -72,7 +72,30 @@ const loginController = async (req, res) => {
   }
 };
 
+/**
+ * Maneja la petición GET /api/auth/condominiums
+ * Retorna los condominios asociados al usuario autenticado.
+ */
+const getCondominiumsController = async (req, res) => {
+  const { id: userId } = req.user;
+
+  try {
+    const condominiums = await authService.listUserCondominiums({ userId });
+
+    if (!condominiums || condominiums.length === 0) {
+      return res.status(204).send();
+    }
+
+    const items = condominiums.map((condo) => ({ id: condo.id, name: condo.name }));
+    return res.status(200).json({ items });
+  } catch (error) {
+    console.error('Error al listar los condominios del usuario:', error);
+    return res.status(500).json({ message: 'Error interno al listar los condominios del usuario.' });
+  }
+};
+
 module.exports = {
   registerController,
   loginController,
+  getCondominiumsController,
 };

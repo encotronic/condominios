@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { authService } from '@/lib/api/auth.service';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import CondominiumSwitcher from '@/components/layout/condominium-switcher';
+import { CondominiumProvider } from '@/components/providers/condominium-provider';
 import { 
   LayoutDashboard, 
   Building, 
@@ -27,7 +29,7 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations(); // AGREGADO: locale
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -43,9 +45,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
     // Verificar autenticación
     if (!authService.isAuthenticated()) {
-      router.push('/login');
+      router.push(`/${locale}/auth/login`); // CORREGIDO: con locale
     }
-  }, [router]);
+  }, [router, locale]);
 
   // Cerrar sidebar al cambiar ruta en mobile
   useEffect(() => {
@@ -69,47 +71,54 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return null; // Redirigirá a login por el useEffect
   }
 
-  // Navegación del sidebar - CORREGIDO para usar t() como función
+  // Navegación del sidebar - CORREGIDO con locale en rutas
   const navigation = [
     { 
       name: t('navigation.dashboard'), 
-      href: '/dashboard', 
+      href: `/${locale}/dashboard`, 
       icon: LayoutDashboard,
-      current: pathname === '/dashboard'
+      current: pathname === `/${locale}/dashboard`
     },
     { 
       name: t('navigation.units'), 
-      href: '/dashboard/units', 
+      href: `/${locale}/dashboard/units`, 
       icon: Building,
-      current: pathname.startsWith('/dashboard/units')
+      current: pathname.startsWith(`/${locale}/dashboard/units`)
     },
     { 
       name: t('navigation.payments'), 
-      href: '/dashboard/payments', 
+      href: `/${locale}/dashboard/payments`, 
       icon: CreditCard,
-      current: pathname.startsWith('/dashboard/payments')
+      current: pathname.startsWith(`/${locale}/dashboard/payments`)
     },
     { 
       name: t('navigation.reports'), 
-      href: '/dashboard/reports', 
+      href: `/${locale}/dashboard/reports`, 
       icon: BarChart3,
-      current: pathname.startsWith('/dashboard/reports')
+      current: pathname.startsWith(`/${locale}/dashboard/reports`)
+    },
+    { 
+      name: t('navigation.announcements'), 
+      href: `/${locale}/dashboard/announcements`, 
+      icon: Bell,
+      current: pathname.startsWith(`/${locale}/dashboard/announcements`)
     },
     { 
       name: 'Propietarios', 
-      href: '/dashboard/owners', 
+      href: `/${locale}/dashboard/owners`, 
       icon: Users,
-      current: pathname.startsWith('/dashboard/owners')
+      current: pathname.startsWith(`/${locale}/dashboard/owners`)
     },
     { 
       name: t('navigation.settings'), 
-      href: '/dashboard/settings', 
+      href: `/${locale}/dashboard/settings`, 
       icon: Settings,
-      current: pathname.startsWith('/dashboard/settings')
+      current: pathname.startsWith(`/${locale}/dashboard/settings`)
     },
   ];
 
   return (
+    <CondominiumProvider>
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar para mobile */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
@@ -141,7 +150,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <nav className="flex-1 px-4 py-6 space-y-1">
             {navigation.map((item) => (
               <Link
-                key={item.name}
+                key={`${item.name}-${item.href}`} // KEY ÚNICO
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
                   item.current
@@ -187,7 +196,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
             {navigation.map((item) => (
               <Link
-                key={item.name}
+                key={`${item.name}-${item.href}`} // KEY ÚNICO
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
                   item.current
@@ -249,6 +258,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
 
+            {/* Condominium switcher */}
+            <div className="hidden sm:flex items-center">
+              <CondominiumSwitcher />
+            </div>
+
             {/* Language switcher */}
             <LanguageSwitcher />
 
@@ -281,7 +295,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
                       </div>
                       <Link
-                        href="/dashboard/settings"
+                        href={`/${locale}/dashboard/settings`} // CORREGIDO: con locale
                         className="flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
                         onClick={() => setUserDropdownOpen(false)}
                       >
@@ -313,5 +327,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </main>
       </div>
     </div>
+    </CondominiumProvider>
   );
 }

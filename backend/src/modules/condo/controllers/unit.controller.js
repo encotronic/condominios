@@ -7,7 +7,8 @@ const unitService = require('../services/unit.service');
  * Roles: ADMIN, MANAGER
  */
 const createUnitController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { code, aliquotPercentage, ownerId } = req.body;
 
     if (!code || !aliquotPercentage || !ownerId) {
@@ -37,7 +38,8 @@ const createUnitController = async (req, res) => {
  * Roles: ADMIN, MANAGER, UNIT_OWNER
  */
 const getUnitsController = async (req, res) => {
-    const { condoId: condominiumId } = req.user; 
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
 
     try {
         const units = await unitService.getUnitsByCondoId(condominiumId);
@@ -53,7 +55,8 @@ const getUnitsController = async (req, res) => {
  * Roles: ADMIN, MANAGER, UNIT_OWNER (solo su propia unidad)
  */
 const getUnitByIdController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { id } = req.params;
 
     try {
@@ -75,7 +78,8 @@ const getUnitByIdController = async (req, res) => {
  * Roles: ADMIN, MANAGER
  */
 const updateUnitController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { id } = req.params;
     const { code, aliquotPercentage, ownerId } = req.body;
 
@@ -109,7 +113,8 @@ const updateUnitController = async (req, res) => {
  * Roles: ADMIN, MANAGER
  */
 const deleteUnitController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { id } = req.params;
 
     try {

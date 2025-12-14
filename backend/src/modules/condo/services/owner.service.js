@@ -54,7 +54,7 @@ class OwnerService {
      */
     async createOwner(ownerData) {
         const { fullName, email, phone, userId, condominiumId } = ownerData;
-
+        console.log('SERVICE createOwner - Data:', { fullName, email, phone, userId, condominiumId });
         const query = `
             INSERT INTO owners (full_name, email, phone, user_id, condominium_id)
             VALUES ($1, $2, $3, $4, $5)

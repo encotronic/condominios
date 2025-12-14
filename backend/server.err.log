@@ -1,0 +1,71 @@
+Error getting announcement error: la sintaxis de entrada no es válida para tipo uuid: «34ade8ce-bf92-4ed6-a905-5bd2dbe34427 da5caf2d-5866-4e9f-887a-fe43e285425d 7fd22eb0-fb23-4c5e-b8c5-c04a7304813c 43edc3dd-95a2-4851-bdf7-30e6440646b9»
+    at C:\Users\Netelcom\Documents\App movil\condominios\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.findById (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\models\announcement.model.js:60:15)
+    at async Object.getById (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\services\announcement.service.js:40:24)
+    at async getAnnouncement (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\controllers\announcement.controller.js:48:26) {
+  length: 302,
+  severity: 'ERROR',
+  code: '22P02',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: "portal sin nombre, parámetro 1 = '...'",
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'uuid.c',
+  line: '177',
+  routine: 'string_to_uuid'
+}
+Error acknowledging announcement error: la sintaxis de entrada no es válida para tipo uuid: «34ade8ce-bf92-4ed6-a905-5bd2dbe34427 da5caf2d-5866-4e9f-887a-fe43e285425d 7fd22eb0-fb23-4c5e-b8c5-c04a7304813c 43edc3dd-95a2-4851-bdf7-30e6440646b9»
+    at C:\Users\Netelcom\Documents\App movil\condominios\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.insertReadReceipt (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\models\announcement.model.js:66:3)
+    at async acknowledgeAnnouncement (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\controllers\announcement.controller.js:63:5) {
+  length: 302,
+  severity: 'ERROR',
+  code: '22P02',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: "portal sin nombre, parámetro 1 = '...'",
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'uuid.c',
+  line: '177',
+  routine: 'string_to_uuid'
+}
+Error getting announcement error: la sintaxis de entrada no es válida para tipo uuid: «34ade8ce-bf92-4ed6-a905-5bd2dbe34427 da5caf2d-5866-4e9f-887a-fe43e285425d 7fd22eb0-fb23-4c5e-b8c5-c04a7304813c 43edc3dd-95a2-4851-bdf7-30e6440646b9»
+    at C:\Users\Netelcom\Documents\App movil\condominios\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.findById (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\models\announcement.model.js:60:15)
+    at async Object.getById (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\services\announcement.service.js:40:24)
+    at async getAnnouncement (C:\Users\Netelcom\Documents\App movil\condominios\backend\src\modules\announcements\controllers\announcement.controller.js:48:26) {
+  length: 302,
+  severity: 'ERROR',
+  code: '22P02',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: "portal sin nombre, parámetro 1 = '...'",
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'uuid.c',
+  line: '177',
+  routine: 'string_to_uuid'
+}

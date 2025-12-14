@@ -35,3 +35,60 @@ jobs:
           NODE_ENV: test
           SKIP_DB_INIT: '1'
         run: npm test
+
+  test-with-db:
+    name: Run tests with Postgres
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U testuser -d testdb" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Postgres
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y postgresql-client
+          for i in {1..30}; do pg_isready -h localhost -p 5432 -U testuser -d testdb && break || sleep 1; done
+
+      - name: Write DB env file
+        run: |
+          echo "PGHOST=localhost" > .env
+          echo "PGUSER=testuser" >> .env
+          echo "PGPASSWORD=testpass" >> .env
+          echo "PGDATABASE=testdb" >> .env
+          echo "PGPORT=5432" >> .env
+
+      - name: Setup test DB schema
+        run: npm run db:setup:test
+
+      - name: Run tests
+        env:
+          NODE_ENV: test
+        run: npm test

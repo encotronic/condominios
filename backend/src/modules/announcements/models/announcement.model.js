@@ -72,9 +72,28 @@ const insertReadReceipt = async ({ condominiumId, announcementId, userId }) => {
   return true;
 };
 
+const update = async ({ id, condominiumId, title, content, visibility, status, startAt, expiresAt, pinned, publishedAt }) => {
+  const result = await db.query(
+    `UPDATE announcements SET title = $1, content = $2, visibility = $3, status = $4, start_at = $5, expires_at = $6, pinned = $7, published_at = $8, updated_at = now()
+     WHERE id = $9 AND condominium_id = $10 RETURNING *`,
+    [title, content, visibility, status, startAt, expiresAt, pinned, publishedAt, id, condominiumId]
+  );
+  return result.rows[0];
+};
+
+const remove = async ({ id, condominiumId }) => {
+  const result = await db.query(
+    `DELETE FROM announcements WHERE id = $1 AND condominium_id = $2 RETURNING *`,
+    [id, condominiumId]
+  );
+  return result.rows[0];
+};
+
 module.exports = {
   insert,
   findAll,
   findById,
   insertReadReceipt,
+  update,
+  remove,
 };

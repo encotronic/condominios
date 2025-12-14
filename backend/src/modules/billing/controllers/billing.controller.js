@@ -8,7 +8,8 @@ const billingService = require('../services/billing.service');
  * Roles requeridos: ADMIN, MANAGER
  */
 const generateBillingController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
     const { startDate, endDate } = req.body;
 
     if (!startDate || !endDate) {
@@ -59,7 +60,9 @@ const generateBillingController = async (req, res) => {
  * Ruta: GET /api/billing/debts
  */
 const listDebtRecordsController = async (req, res) => {
-    const { condoId: condominiumId, id: userId, role } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
+    const { id: userId, role } = req.user;
 
     // Determinar si debemos filtrar por el ID del usuario
     // Si es ADMIN o MANAGER, el userId es null para el modelo (ver todas las deudas)
@@ -87,7 +90,8 @@ const listDebtRecordsController = async (req, res) => {
  * Ruta: GET /api/billing/charges-summary
  */
 const getChargesSummaryController = async (req, res) => {
-    const { condoId: condominiumId } = req.user;
+    const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+    const condominiumId = getTargetCondoId(req);
 
     try {
         const summary = await billingService.getChargesSummary(condominiumId);

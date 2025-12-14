@@ -31,18 +31,27 @@ export interface AuthResponse {
   condominiumId?: string;
 }
 
+export interface CondominiumItem {
+  id: string;
+  name: string;
+}
+
+export interface CondominiumListResponse {
+  items: CondominiumItem[];
+}
+
 // Servicio de autenticación
 export const authService = {
   // Login
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    // Agregar condominiumId si no viene
+    // Enviar solo datos proporcionados, el backend asignará el condominio
     const loginData = {
       email: credentials.email,
       password: credentials.password,
-      condominiumId: credentials.condominiumId || '5074d155-ba23-4ca2-9659-b585060d4632'
+      condominiumId: credentials.condominiumId || undefined // ← CORREGIDO: camelCase
     };
     
-    const response = await apiClient.post('/api/auth/login', loginData);
+    const response = await apiClient.post('/auth/login', loginData);
     
     // Guardar token y usuario solo en cliente
     if (typeof window !== 'undefined') {
@@ -73,10 +82,10 @@ export const authService = {
       password: userData.password,
       fullName: userData.fullName,
       role: userData.role,
-      condominiumId: userData.condominiumId || '5074d155-ba23-4ca2-9659-b585060d4632'
+      condominiumId: userData.condominiumId || undefined // ← CORREGIDO: camelCase
     };
     
-    const response = await apiClient.post('/api/auth/register', registerData);
+    const response = await apiClient.post('/auth/register', registerData);
     
     if (typeof window !== 'undefined') {
       if (response.data.token) {
@@ -97,12 +106,30 @@ export const authService = {
     }
   },
 
-  // Get current user
+  // Get current user - VERSIÓN CORREGIDA CON MANEJO DE ERRORES
   getCurrentUser() {
     if (typeof window === 'undefined') return null;
     
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
+    try {
+      const userStr = localStorage.getItem('user');
+      
+      // Verificar si el valor es válido antes de parsear
+      if (!userStr || 
+          userStr === 'null' || 
+          userStr === 'undefined' || 
+          userStr === '' || 
+          userStr.trim() === '') {
+        return null;
+      }
+      
+      return JSON.parse(userStr);
+    } catch (error) {
+      console.error('❌ Error parsing user from localStorage:', error);
+      // Limpiar datos corruptos
+      localStorage.removeItem('user');
+      localStorage.removeItem('auth_token');
+      return null;
+    }
   },
 
   // Get token
@@ -114,6 +141,47 @@ export const authService = {
   // Check if authenticated
   isAuthenticated(): boolean {
     if (typeof window === 'undefined') return false;
-    return !!localStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
+    return !!token && token !== 'null' && token !== 'undefined';
   },
+
+  // Get current user's condominium ID
+  getCurrentCondominiumId(): string | null {
+    if (typeof window === 'undefined') return null;
+    
+    try {
+      const user = this.getCurrentUser();
+      if (!user) return null;
+      
+      // Intentar obtener de diferentes propiedades (backend puede usar diferentes formatos)
+      return (
+        user.condominium_id || 
+        user.condominiumId || 
+        user.condo_id || 
+        user.condoId
+      );
+    } catch (error) {
+      console.error('Error getting condominium ID:', error);
+      return null;
+    }
+  },
+
+  // Get user profile from API (opcional, para refrescar datos)
+  async getProfile(): Promise<any> {
+    const response = await apiClient.get('/auth/profile');
+    return response.data;
+  }
+};
+
+// Obtener lista de condominios asociados al usuario actual
+export const fetchUserCondominiums = async (): Promise<CondominiumItem[]> => {
+  try {
+    const response = await apiClient.get<CondominiumListResponse>('/auth/condominiums');
+    return response.data.items;
+  } catch (error: any) {
+    if (error?.response?.status === 204) {
+      return [];
+    }
+    throw error;
+  }
 };

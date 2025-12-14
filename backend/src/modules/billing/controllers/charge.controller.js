@@ -8,7 +8,8 @@ const chargeService = require('../services/charge.service');
  */
 const getChargesController = async (req, res) => {
     try {
-        const { condoId } = req.user;
+        const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+        const condoId = getTargetCondoId(req);
         const charges = await chargeService.getAllCharges(condoId);
         
         res.status(200).json({
@@ -33,7 +34,8 @@ const getChargesController = async (req, res) => {
  */
 const getChargeByIdController = async (req, res) => {
     try {
-        const { condoId } = req.user;
+        const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+        const condoId = getTargetCondoId(req);
         const { id } = req.params;
         
         const charge = await chargeService.getChargeById(id, condoId);
@@ -67,7 +69,8 @@ const getChargeByIdController = async (req, res) => {
  */
 const createChargeController = async (req, res) => {
     try {
-        const { condoId } = req.user;
+        const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+        const condoId = getTargetCondoId(req);
         const { name, description, amount, frequency, is_active, apply_to_all_units } = req.body;
         
         // Validaciones básicas
@@ -112,7 +115,8 @@ const createChargeController = async (req, res) => {
  */
 const updateChargeController = async (req, res) => {
     try {
-        const { condoId } = req.user;
+        const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+        const condoId = getTargetCondoId(req);
         const { id } = req.params;
         const updateData = req.body;
         
@@ -148,7 +152,8 @@ const updateChargeController = async (req, res) => {
  */
 const deleteChargeController = async (req, res) => {
     try {
-        const { condoId } = req.user;
+        const getTargetCondoId = require('../../../shared/utils/getTargetCondoId');
+        const condoId = getTargetCondoId(req);
         const { id } = req.params;
         
         const result = await chargeService.deleteCharge(id, condoId);
